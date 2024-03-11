@@ -81,7 +81,7 @@ namespace Proj_AlarmenMaks
 
                             // Alarm is ingevoerd
                             Console.WriteLine("Het alarm werd ingevoerd.");
-                            Console.WriteLine("Druk op een toets op verder te gaan.");
+                            Console.WriteLine("Druk op een toets om verder te gaan.");
 
                             Console.ReadKey();
                         }
@@ -91,7 +91,7 @@ namespace Proj_AlarmenMaks
                         {
                             // foutmelding 
                             Console.WriteLine("Jammer, maar er is geen plaats meer voor een nieuw alarm");
-                            Console.WriteLine("Druk op een toets op verder te gaan.");
+                            Console.WriteLine("Druk op een toets om verder te gaan.");
 
                             Console.ReadKey();
                         }
@@ -137,7 +137,7 @@ namespace Proj_AlarmenMaks
 
                         // Alarm is ingevoerd
                         Console.WriteLine("Het alarm werd aangepast.");
-                        Console.WriteLine("Druk op een toets op verder te gaan.");
+                        Console.WriteLine("Druk op een toets om verder te gaan.");
 
                         Console.ReadKey();
 
@@ -146,17 +146,34 @@ namespace Proj_AlarmenMaks
                     // Verwijderen:
                     else if(keuze == 3)
                     {
-                        // Toon Alarmen 
+
+                        // Toon Alarmen
+                        Console.WriteLine(ToonAlarmen());
+
                         // Keuze Alarm
+                        Console.Write("Geef het nummer van het alarm dat uw wilt aanpassen: ");
+                        int plaats = int.Parse(Console.ReadLine()) - 1;
+
                         // Alarm verwijderen
+                        AlarmOpslaan(null, null, null, plaats);
+
                         // Alarm is verwijderd
+                        Console.WriteLine("Het alarm werd verwijderd.");
+                        Console.WriteLine("Druk op een toets om verder te gaan.");
+
+                        Console.ReadKey();
                     }
-                   
+
 
                     // Tonen:
                     else if(keuze == 4)
                     {
-                        // Toon de alarmen in de juiste vorm
+                        // Toon Alarmen
+                        Console.WriteLine(ToonAlarmen());
+
+                        Console.WriteLine("\n\nDruk op een toets om verder te gaan.");
+
+                        Console.ReadKey();
 
                     }
 
@@ -164,7 +181,9 @@ namespace Proj_AlarmenMaks
                     else if (keuze == 5)
                     {
                         // byebye tekstje
+                        Console.WriteLine("Ben je eindelijk uit je bed?\n Goed zo!\nDruk op een toets om af te sluiten.");
 
+                        Console.ReadKey();
                     }
 
                     else
@@ -201,11 +220,23 @@ namespace Proj_AlarmenMaks
         {
             int antwoord = -1;
 
+            // Array overlopen 
+            for (int i = 0; i < _datumEnTijdstip.Count(); i++)
+            {
+                if (_datumEnTijdstip[i] == null)
+                {
+                    antwoord = i;
+                    break;
+                }
+                
+            }
+
+            // stuur antwoord terug
             return antwoord;
         }
 
         /// <summary>
-        /// Slaat een alarm op in het gegeugen
+        /// Slaat een alarm op in het geheugen
         /// </summary>
         /// <param name="ontvTijdstip"></param>
         /// <param name="ontvDatum"></param>
@@ -213,6 +244,16 @@ namespace Proj_AlarmenMaks
         /// <param name="nrIndex"></param>
         static public void AlarmOpslaan(String ontvTijdstip, String ontvDatum, String omschrijving, int nrIndex)
         {
+            try
+            {
+                DateTime alarm = DateTime.Parse($"{ontvDatum} {ontvTijdstip}");
+                _datumEnTijdstip[nrIndex]= alarm;
+                _omschrijving[nrIndex] = omschrijving;
+            }
+            catch
+            {
+
+            }
 
         }
 
@@ -223,7 +264,28 @@ namespace Proj_AlarmenMaks
         static public String ToonAlarmen()
         {
             String antwoord = null;
+            DateTime vandaag = DateTime.Now;
 
+            for (int i = 0; i < _datumEnTijdstip.Count(); i++)
+            {
+                if (_datumEnTijdstip[i] > vandaag)
+                {
+                    TimeSpan verschil = _datumEnTijdstip[i] - vandaag;
+                    int aantalDagen =  Convert.ToInt32(Math.Floor(verschil.TotalDays));
+
+                    int aantalUren = Convert.ToInt32(Math.Floor(verschil.TotalHours - (aantalDagen * 24)));
+
+                    int aantalmin = Convert.ToInt32(Math.Floor(verschil.TotalMinutes - (aantalDagen * 24*60) - (aantalUren * 60)));
+
+                    antwoord += $"{_omschrijving[i]} op {_datumEnTijdstip[i].ToShortDateString()} om {_datumEnTijdstip[i].ToShortTimeString()} gaat af binnen " +
+                        $"" +
+                        $"{aantalDagen.ToString()} dagen, {aantalUren.ToString()} uren en {aantalmin.ToString()} minuten";
+
+                }
+
+
+            }
+            // <omschrijving> op <dd/mm/yyyy>  om <hh:mm> gaat af binnen <aantal> dagen, <aantal> uur en <aantal> seconden
             return antwoord;
         }
 
