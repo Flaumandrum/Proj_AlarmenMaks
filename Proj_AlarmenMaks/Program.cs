@@ -155,7 +155,7 @@ namespace Proj_AlarmenMaks
                         int plaats = int.Parse(Console.ReadLine()) - 1;
 
                         // Alarm verwijderen
-                        AlarmOpslaan(null, null, null, plaats);
+                        AlarmOpslaan("00:00:00", "01/01/0001", null, plaats);
 
                         // Alarm is verwijderd
                         Console.WriteLine("Het alarm werd verwijderd.");
@@ -223,7 +223,7 @@ namespace Proj_AlarmenMaks
             // Array overlopen 
             for (int i = 0; i < _datumEnTijdstip.Count(); i++)
             {
-                if (_datumEnTijdstip[i] == null)
+                if (_datumEnTijdstip[i] == DateTime.Parse("01/01/0001 00:00:00"))
                 {
                     antwoord = i;
                     break;
@@ -277,9 +277,9 @@ namespace Proj_AlarmenMaks
 
                     int aantalmin = Convert.ToInt32(Math.Floor(verschil.TotalMinutes - (aantalDagen * 24*60) - (aantalUren * 60)));
 
-                    antwoord += $"{_omschrijving[i]} op {_datumEnTijdstip[i].ToShortDateString()} om {_datumEnTijdstip[i].ToShortTimeString()} gaat af binnen " +
+                    antwoord += $"{(i+1).ToString()}) {_omschrijving[i]} op {_datumEnTijdstip[i].ToShortDateString()} om {_datumEnTijdstip[i].ToShortTimeString()} gaat af binnen " +
                         $"" +
-                        $"{aantalDagen.ToString()} dagen, {aantalUren.ToString()} uren en {aantalmin.ToString()} minuten";
+                        $"{aantalDagen.ToString()} dagen, {aantalUren.ToString()} uren en {aantalmin.ToString()} minuten "+Environment.NewLine;
 
                 }
 
